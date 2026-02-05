@@ -6,6 +6,7 @@ rivlus.com için ana sayfa ve gizlilik politikası. Vercel’e deploy için bu k
 
 - `index.html` – Ana sayfa (Rivlus / TCR tanıtımı, info@rivlus.com)
 - `privacy/index.html` – Gizlilik politikası (URL: `/privacy`)
+- `terms/index.html` – Kullanım koşulları (URL: `/terms`)
 
 ## Vercel’e deploy
 
