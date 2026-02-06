@@ -58,21 +58,18 @@ module.exports = async function handler(req, res) {
       // RLS policy: status = 'active' OR seller_id = auth.uid()
       // Anonymous key ile sadece active olanları görebiliriz
       const listingUrl = `${supabaseUrl.replace(/\/$/, '')}/rest/v1/marketplace_listings?id=eq.${encodeURIComponent(id)}&status=eq.active&select=title,price,currency`;
-      console.log('Fetching listing from:', listingUrl);
       
       const listingRes = await fetch(listingUrl, {
         headers: {
           apikey: supabaseAnonKey,
           Authorization: `Bearer ${supabaseAnonKey}`,
           'Content-Type': 'application/json',
+          'Prefer': 'return=representation',
         },
       });
       
-      console.log('Listing response status:', listingRes.status);
-      
       if (listingRes.ok) {
         const listingData = await listingRes.json();
-        console.log('Listing data received:', JSON.stringify(listingData));
         
         if (Array.isArray(listingData) && listingData.length > 0) {
           const listing = listingData[0];
@@ -80,24 +77,20 @@ module.exports = async function handler(req, res) {
           // Başlık
           if (listing.title) {
             title = String(listing.title);
-            console.log('Title set to:', title);
           }
           
           // Fiyat
           if (listing.price !== null && listing.price !== undefined) {
             price = parseFloat(listing.price);
-            console.log('Price set to:', price);
           }
           
           // Para birimi
           if (listing.currency) {
             currency = String(listing.currency);
-            console.log('Currency set to:', currency);
           }
           
           // Görselleri ayrı bir query ile çek
           const imagesUrl = `${supabaseUrl.replace(/\/$/, '')}/rest/v1/listing_images?listing_id=eq.${encodeURIComponent(id)}&select=image_url,sort_order&order=sort_order.asc`;
-          console.log('Fetching images from:', imagesUrl);
           
           const imagesRes = await fetch(imagesUrl, {
             headers: {
@@ -107,11 +100,8 @@ module.exports = async function handler(req, res) {
             },
           });
           
-          console.log('Images response status:', imagesRes.status);
-          
           if (imagesRes.ok) {
             const imagesData = await imagesRes.json();
-            console.log('Images data received:', JSON.stringify(imagesData));
             
             if (Array.isArray(imagesData) && imagesData.length > 0) {
               // İlk görseli al (zaten sort_order'a göre sıralı)
@@ -120,33 +110,28 @@ module.exports = async function handler(req, res) {
                 const imgUrl = String(firstImage.image_url).trim();
                 if (imgUrl.startsWith('http')) {
                   imageUrl = imgUrl;
-                  console.log('Image URL set to:', imageUrl);
                 }
               }
-            } else {
-              console.log('No images found for listing');
             }
-          } else {
-            const errorText = await imagesRes.text();
-            console.error('Supabase images fetch error:', imagesRes.status, errorText);
           }
         } else {
-          console.log('No listing found with id:', id);
           if (isDebug) {
-            debugInfo = `No listing found with id: ${id}`;
+            debugInfo = `No listing found with id: ${id} (status must be 'active')`;
           }
         }
       } else {
         // Hata durumunda log
         const errorText = await listingRes.text();
-        console.error('Supabase listing fetch error:', listingRes.status, errorText);
         if (isDebug) {
-          debugInfo = `Supabase error: ${listingRes.status} - ${errorText}`;
+          debugInfo = `Supabase error ${listingRes.status}: ${errorText.substring(0, 200)}`;
         }
       }
     } catch (err) {
       // Supabase hatasında varsayılan değerler kullanılır
       console.error('Supabase error:', err);
+      if (isDebug) {
+        debugInfo = `Error: ${err.message || String(err)}`;
+      }
     }
   }
 
