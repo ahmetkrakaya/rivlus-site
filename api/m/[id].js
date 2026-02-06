@@ -43,10 +43,23 @@ module.exports = async function handler(req, res) {
   const supabaseUrl = process.env.SUPABASE_URL;
   const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
 
-  if (supabaseUrl && supabaseAnonKey) {
+  // Debug mode (development için)
+  const isDebug = req.query.debug === 'true';
+  let debugInfo = null;
+  
+  if (!supabaseUrl || !supabaseAnonKey) {
+    console.error('Missing Supabase environment variables');
+    if (isDebug) {
+      debugInfo = 'Environment variables not set';
+    }
+  } else {
     try {
       // Marketplace listing bilgilerini al
+      // RLS policy: status = 'active' OR seller_id = auth.uid()
+      // Anonymous key ile sadece active olanları görebiliriz
       const listingUrl = `${supabaseUrl.replace(/\/$/, '')}/rest/v1/marketplace_listings?id=eq.${encodeURIComponent(id)}&status=eq.active&select=title,price,currency`;
+      console.log('Fetching listing from:', listingUrl);
+      
       const listingRes = await fetch(listingUrl, {
         headers: {
           apikey: supabaseAnonKey,
@@ -55,28 +68,37 @@ module.exports = async function handler(req, res) {
         },
       });
       
+      console.log('Listing response status:', listingRes.status);
+      
       if (listingRes.ok) {
         const listingData = await listingRes.json();
+        console.log('Listing data received:', JSON.stringify(listingData));
+        
         if (Array.isArray(listingData) && listingData.length > 0) {
           const listing = listingData[0];
           
           // Başlık
           if (listing.title) {
             title = String(listing.title);
+            console.log('Title set to:', title);
           }
           
           // Fiyat
           if (listing.price !== null && listing.price !== undefined) {
             price = parseFloat(listing.price);
+            console.log('Price set to:', price);
           }
           
           // Para birimi
           if (listing.currency) {
             currency = String(listing.currency);
+            console.log('Currency set to:', currency);
           }
           
           // Görselleri ayrı bir query ile çek
           const imagesUrl = `${supabaseUrl.replace(/\/$/, '')}/rest/v1/listing_images?listing_id=eq.${encodeURIComponent(id)}&select=image_url,sort_order&order=sort_order.asc`;
+          console.log('Fetching images from:', imagesUrl);
+          
           const imagesRes = await fetch(imagesUrl, {
             headers: {
               apikey: supabaseAnonKey,
@@ -85,8 +107,12 @@ module.exports = async function handler(req, res) {
             },
           });
           
+          console.log('Images response status:', imagesRes.status);
+          
           if (imagesRes.ok) {
             const imagesData = await imagesRes.json();
+            console.log('Images data received:', JSON.stringify(imagesData));
+            
             if (Array.isArray(imagesData) && imagesData.length > 0) {
               // İlk görseli al (zaten sort_order'a göre sıralı)
               const firstImage = imagesData[0];
@@ -94,15 +120,29 @@ module.exports = async function handler(req, res) {
                 const imgUrl = String(firstImage.image_url).trim();
                 if (imgUrl.startsWith('http')) {
                   imageUrl = imgUrl;
+                  console.log('Image URL set to:', imageUrl);
                 }
               }
+            } else {
+              console.log('No images found for listing');
             }
+          } else {
+            const errorText = await imagesRes.text();
+            console.error('Supabase images fetch error:', imagesRes.status, errorText);
+          }
+        } else {
+          console.log('No listing found with id:', id);
+          if (isDebug) {
+            debugInfo = `No listing found with id: ${id}`;
           }
         }
       } else {
         // Hata durumunda log
         const errorText = await listingRes.text();
         console.error('Supabase listing fetch error:', listingRes.status, errorText);
+        if (isDebug) {
+          debugInfo = `Supabase error: ${listingRes.status} - ${errorText}`;
+        }
       }
     } catch (err) {
       // Supabase hatasında varsayılan değerler kullanılır
@@ -142,6 +182,7 @@ module.exports = async function handler(req, res) {
   <p style="color: #666; font-size: 0.9rem;">TCR Market - Twenty City Runners</p>
   <h1 style="font-size: 1.25rem;">${safeTitle}</h1>
   <p style="color: #ea580c; font-size: 1.1rem; font-weight: bold;">${safePrice}</p>
+  ${debugInfo ? `<p style="color: red; font-size: 0.8rem; margin-top: 1rem;">Debug: ${escapeHtml(debugInfo)}</p>` : ''}
   <p><a href="${escapeHtml(deepLink)}" style="display: inline-block; background: #ea580c; color: white; padding: 0.6rem 1.2rem; text-decoration: none; border-radius: 8px;">Uygulamada aç</a></p>
 </body>
 </html>`;
