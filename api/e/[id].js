@@ -96,12 +96,86 @@ module.exports = async function handler(req, res) {
   <meta name="twitter:title" content="${safeTitle} | TCR - Twenty City Runners" />
   <meta name="twitter:description" content="${safeDesc}" />
   <meta name="twitter:image" content="${escapeHtml(imageUrl)}" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: linear-gradient(135deg, #F5F7FA 0%, #E8ECF0 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      color: #1E3A5F;
+    }
+    .container {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(30, 58, 95, 0.1);
+      max-width: 420px;
+      width: 100%;
+      overflow: hidden;
+      text-align: center;
+    }
+    .header {
+      background: linear-gradient(135deg, #1E3A5F 0%, #3D5A80 100%);
+      color: white;
+      padding: 1.5rem 1rem;
+    }
+    .header-brand {
+      font-size: 0.85rem;
+      font-weight: 500;
+      opacity: 0.9;
+      letter-spacing: 0.5px;
+    }
+    .content {
+      padding: 2rem 1.5rem;
+    }
+    .title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #1E3A5F;
+      margin-bottom: 1rem;
+      line-height: 1.3;
+    }
+    .description {
+      font-size: 1rem;
+      color: #5C6B7A;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+    .btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #1E3A5F 0%, #3D5A80 100%);
+      color: white;
+      padding: 0.875rem 2rem;
+      text-decoration: none;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
+    }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(30, 58, 95, 0.4);
+    }
+    .btn:active {
+      transform: translateY(0);
+    }
+  </style>
 </head>
-<body style="font-family: system-ui, sans-serif; max-width: 480px; margin: 2rem auto; padding: 1rem; text-align: center;">
-  <p style="color: #666; font-size: 0.9rem;">TCR - Twenty City Runners</p>
-  <h1 style="font-size: 1.25rem;">${safeTitle}</h1>
-  <p style="color: #444;">${safeDesc}</p>
-  <p><a href="${escapeHtml(deepLink)}" id="app-link" style="display: inline-block; background: #ea580c; color: white; padding: 0.6rem 1.2rem; text-decoration: none; border-radius: 8px;">Uygulamada aç</a></p>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="header-brand">TCR - Twenty City Runners</div>
+    </div>
+    <div class="content">
+      <h1 class="title">${safeTitle}</h1>
+      <p class="description">${safeDesc}</p>
+      <a href="${escapeHtml(deepLink)}" id="app-link" class="btn">Uygulamada Aç</a>
+    </div>
+  </div>
   <script>
     (function() {
       // Bot algılama - WhatsApp, Telegram, Facebook gibi crawler'lar için JavaScript çalışmasın
