@@ -70,7 +70,32 @@ module.exports = function handler(req, res) {
   <p style="color: #666; font-size: 0.9rem;">TCR Market - Twenty City Runners</p>
   <h1 style="font-size: 1.25rem;">${safeTitle}</h1>
   <p style="color: #444; font-size: 1.1rem; font-weight: bold; color: #ea580c;">${safeDesc}</p>
-  ${id ? `<p><a href="${escapeHtml(deepLink)}" style="display: inline-block; background: #ea580c; color: white; padding: 0.6rem 1.2rem; text-decoration: none; border-radius: 8px;">Uygulamada aç</a></p>` : ''}
+  ${id ? `<p><a href="${escapeHtml(deepLink)}" id="app-link" style="display: inline-block; background: #ea580c; color: white; padding: 0.6rem 1.2rem; text-decoration: none; border-radius: 8px;">Uygulamada aç</a></p>
+  <script>
+    (function() {
+      const deepLink = ${JSON.stringify(deepLink)};
+      const appLink = document.getElementById('app-link');
+      let clicked = false;
+      let opened = false;
+      
+      function tryOpenApp() {
+        if (opened) return;
+        opened = true;
+        window.location.href = deepLink;
+        setTimeout(function() {
+          if (!clicked) {
+            appLink.style.opacity = '1';
+          }
+        }, 2000);
+      }
+      
+      setTimeout(tryOpenApp, 500);
+      appLink.addEventListener('click', function(e) {
+        clicked = true;
+        tryOpenApp();
+      });
+    })();
+  </script>` : ''}
 </body>
 </html>`;
 

@@ -101,7 +101,42 @@ module.exports = async function handler(req, res) {
   <p style="color: #666; font-size: 0.9rem;">TCR - Twenty City Runners</p>
   <h1 style="font-size: 1.25rem;">${safeTitle}</h1>
   <p style="color: #444;">${safeDesc}</p>
-  <p><a href="${escapeHtml(deepLink)}" style="display: inline-block; background: #ea580c; color: white; padding: 0.6rem 1.2rem; text-decoration: none; border-radius: 8px;">Uygulamada aç</a></p>
+  <p><a href="${escapeHtml(deepLink)}" id="app-link" style="display: inline-block; background: #ea580c; color: white; padding: 0.6rem 1.2rem; text-decoration: none; border-radius: 8px;">Uygulamada aç</a></p>
+  <script>
+    (function() {
+      const deepLink = ${JSON.stringify(deepLink)};
+      const appLink = document.getElementById('app-link');
+      let clicked = false;
+      let opened = false;
+      
+      // Kullanıcı sayfaya tıklarsa veya sayfa yüklendiğinde otomatik aç
+      function tryOpenApp() {
+        if (opened) return;
+        opened = true;
+        
+        // Deep link'i deneyelim
+        window.location.href = deepLink;
+        
+        // Eğer uygulama açılmazsa (2 saniye sonra), sayfada kal
+        setTimeout(function() {
+          if (!clicked) {
+            // Sayfa görünür kalır, kullanıcı tekrar deneyebilir
+            appLink.style.opacity = '1';
+          }
+        }, 2000);
+      }
+      
+      // Sayfa yüklendiğinde otomatik aç (WhatsApp gibi platformlar için preview gösterilir, sonra açılır)
+      // Küçük bir gecikme ile aç ki preview gösterilsin
+      setTimeout(tryOpenApp, 500);
+      
+      // Manuel tıklama için
+      appLink.addEventListener('click', function(e) {
+        clicked = true;
+        tryOpenApp();
+      });
+    })();
+  </script>
 </body>
 </html>`;
 
