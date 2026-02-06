@@ -73,6 +73,15 @@ module.exports = function handler(req, res) {
   ${id ? `<p><a href="${escapeHtml(deepLink)}" id="app-link" style="display: inline-block; background: #ea580c; color: white; padding: 0.6rem 1.2rem; text-decoration: none; border-radius: 8px;">Uygulamada aç</a></p>
   <script>
     (function() {
+      // Bot algılama - WhatsApp, Telegram, Facebook gibi crawler'lar için JavaScript çalışmasın
+      const ua = navigator.userAgent || '';
+      const isBot = /bot|crawler|spider|crawling|facebookexternalhit|WhatsApp|Telegram|Slack|Twitter|LinkedIn/i.test(ua);
+      
+      // Bot ise JavaScript çalıştırma (preview için sayfa görünür kalmalı)
+      if (isBot) {
+        return;
+      }
+      
       const deepLink = ${JSON.stringify(deepLink)};
       const appLink = document.getElementById('app-link');
       let clicked = false;

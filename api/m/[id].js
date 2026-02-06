@@ -153,8 +153,9 @@ module.exports = async function handler(req, res) {
   <meta property="og:url" content="${escapeHtml(pageUrl)}" />
   <meta property="og:title" content="${safeTitle} | TCR Market" />
   <meta property="og:description" content="${safePrice}" />
-  <meta property="og:image" content="${escapeHtml(imageUrl)}" />
-  <meta property="og:image:secure_url" content="${escapeHtml(imageUrl)}" />
+  <meta property="og:image" content="${imageUrl}" />
+  <meta property="og:image:secure_url" content="${imageUrl}" />
+  <meta property="og:image:type" content="image/jpeg" />
   ${isDefaultLogo ? '<meta property="og:image:width" content="512" /><meta property="og:image:height" content="512" />' : ''}
   <meta property="og:site_name" content="TCR Market - Twenty City Runners" />
   <meta property="og:locale" content="tr_TR" />
@@ -171,6 +172,15 @@ module.exports = async function handler(req, res) {
   <p><a href="${escapeHtml(deepLink)}" id="app-link" style="display: inline-block; background: #ea580c; color: white; padding: 0.6rem 1.2rem; text-decoration: none; border-radius: 8px;">Uygulamada aç</a></p>
   <script>
     (function() {
+      // Bot algılama - WhatsApp, Telegram, Facebook gibi crawler'lar için JavaScript çalışmasın
+      const ua = navigator.userAgent || '';
+      const isBot = /bot|crawler|spider|crawling|facebookexternalhit|WhatsApp|Telegram|Slack|Twitter|LinkedIn/i.test(ua);
+      
+      // Bot ise JavaScript çalıştırma (preview için sayfa görünür kalmalı)
+      if (isBot) {
+        return;
+      }
+      
       const deepLink = ${JSON.stringify(deepLink)};
       const appLink = document.getElementById('app-link');
       let clicked = false;
@@ -193,7 +203,7 @@ module.exports = async function handler(req, res) {
         }, 2000);
       }
       
-      // Sayfa yüklendiğinde otomatik aç (WhatsApp gibi platformlar için preview gösterilir, sonra açılır)
+      // Sayfa yüklendiğinde otomatik aç (sadece gerçek kullanıcılar için)
       // Küçük bir gecikme ile aç ki preview gösterilsin
       setTimeout(tryOpenApp, 500);
       
