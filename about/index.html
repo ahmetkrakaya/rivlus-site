@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TCR Kimdir? – Hakkımızda | Twenty City Runners</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      line-height: 1.7;
+      color: #1a1a1a;
+      background: #f5f5f5;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    header {
+      padding: 2rem 0 1rem;
+      border-bottom: 1px solid #eee;
+      background: #fff;
+      margin-bottom: 2rem;
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 0 0 0.5rem;
+      color: #111;
+    }
+
+    .back {
+      font-size: 0.875rem;
+      margin-top: 0.5rem;
+    }
+
+    .back a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+
+    .back a:hover {
+      text-decoration: underline;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .motto-card {
+      background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+      border-left: 4px solid #dc2626;
+    }
+
+    .motto-text {
+      font-size: 1.1rem;
+      font-style: italic;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+
+    .motto-author {
+      color: #dc2626;
+      font-weight: 700;
+      font-size: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    .section-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin: 0 0 1rem;
+      color: #111;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .section-title .icon {
+      font-size: 1.5rem;
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 1.5rem 0 0.75rem;
+      color: #dc2626;
+      text-decoration: underline;
+    }
+
+    h2:first-of-type {
+      margin-top: 0;
+    }
+
+    p {
+      margin: 0 0 1rem;
+      color: #333;
+    }
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+
+    .highlight {
+      color: #2563eb;
+      font-weight: 600;
+    }
+
+    .social-section {
+      background: linear-gradient(135deg, #fff5f5 0%, #ffffff 100%);
+      border: 2px solid #fee2e2;
+    }
+
+    .social-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #dc2626;
+      text-align: center;
+      margin: 0 0 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .social-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .social-button {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem 1.5rem;
+      background: #fff;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      text-decoration: none;
+      color: #1a1a1a;
+      transition: all 0.2s;
+    }
+
+    .social-button:hover {
+      border-color: #dc2626;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.15);
+    }
+
+    .social-button .icon {
+      font-size: 1.5rem;
+    }
+
+    .social-button .text {
+      flex: 1;
+    }
+
+    .social-button .handle {
+      color: #dc2626;
+      font-weight: 600;
+    }
+
+    .faq-item {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .faq-question {
+      font-weight: 600;
+      color: #111;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    .faq-answer {
+      color: #555;
+      margin-left: 1.5rem;
+    }
+
+    .faq-answer ul {
+      margin: 0.5rem 0;
+      padding-left: 1.5rem;
+    }
+
+    .faq-answer li {
+      margin-bottom: 0.5rem;
+    }
+
+    .info-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .info-list li {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .info-list li:last-child {
+      border-bottom: none;
+    }
+
+    .info-label {
+      font-weight: 600;
+      color: #111;
+      margin-bottom: 0.25rem;
+    }
+
+    .info-value {
+      color: #555;
+    }
+
+    .achievement-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .achievement-item:last-child {
+      border-bottom: none;
+    }
+
+    .achievement-number {
+      background: #f3f4f6;
+      color: #111;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.875rem;
+      flex-shrink: 0;
+    }
+
+    .achievement-text {
+      flex: 1;
+      color: #333;
+    }
+
+    .group-photos {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .group-photo {
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      object-fit: cover;
+    }
+
+    @media (min-width: 768px) {
+      .group-photos {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .schedule-item {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .schedule-item:last-child {
+      border-bottom: none;
+    }
+
+    .schedule-day {
+      font-weight: 600;
+      color: #dc2626;
+      margin-bottom: 0.25rem;
+    }
+
+    .schedule-time {
+      font-weight: 600;
+      color: #111;
+    }
+
+    .schedule-location {
+      color: #555;
+    }
+
+    a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .instagram-link {
+      display: inline-block;
+      color: #dc2626;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>TCR Kimdir?</h1>
+      <p class="back"><a href="/">← Ana sayfaya dön</a></p>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Motto Card -->
+    <div class="card motto-card">
+      <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem;">
+        <span style="font-size: 1.5rem;">🇹🇷</span>
+      </div>
+      <p class="motto-text">Sağlam Kafa Sağlam Vücutta Bulunur. (Health in Mind, Health in Body.)</p>
+      <p class="motto-author">Mustafa Kemal ATATÜRK</p>
+    </div>
+
+    <!-- TCR Hakkında -->
+    <div class="card">
+      <h2 class="section-title">
+        <span class="icon">❓</span>
+        TCR Kimdir?
+      </h2>
+      <p>
+        <span class="highlight">TCR</span>, 2025 yılında Denizli'de kurulan şehir koşucularının oluşturduğu koşu grubudur. Şehrin her noktasından, tüm yaş gruplarındaki şehir insanına dokunmaya çalışarak şehirde koşu kültürünü temellendiriyoruz. Ulaşabildiğimiz her kişinin hayatında sürdürülebilir bir şekilde yer edinmesini istediğimiz koşuyu, spordan öte bir yaşam tarzı haline getirilmesini amaçlıyoruz.
+      </p>
+      <p>
+        Koşu ve yoga alanında deneyimli kişilerle oluşturulan yönetim ekibinden, yeni koşucuların katılımlarından, grubun büyümesinden, ücretsiz antrenmanlardan ve farklı şehirlerdeki yarışlara katılımlardan bahsedilmektedir.
+      </p>
+      <p>
+        Şehir içinde düzenledikleri halka açık yarışlar, coffee run koşuları ve milli bayramlardaki kutlama koşuları ile şehirdeki görünürlüklerini arttırdıkları belirtilmiştir.
+      </p>
+      <h2>Grup Antrenman Seviyesi</h2>
+      <p>
+        Grubumuz her seviyeye uygundur. Daha önce hiç koşmamış bireylere ulaşıp onları belirli bir seviyeye getirdikten sonra mevcut seviyedeki gruplara dahil etme amacındayız.
+      </p>
+    </div>
+
+    <!-- Takvim -->
+    <div class="card">
+      <h2 class="section-title">
+        <span class="icon">📅</span>
+        Takvim
+      </h2>
+      <div class="schedule-item">
+        <div class="schedule-day">Salı ve Perşembe</div>
+        <div class="schedule-time">20:00</div>
+        <div class="schedule-location">Pamukkale Üniversitesi Atletizm Pisti</div>
+      </div>
+      <div class="schedule-item">
+        <div class="schedule-day">Cumartesi</div>
+        <div class="schedule-time">20:00</div>
+        <div class="schedule-location">Coffee Run</div>
+      </div>
+      <div class="schedule-item">
+        <div class="schedule-day">Pazar</div>
+        <div class="schedule-time">08:00</div>
+        <div class="schedule-location">Çamlık Kent Ormanı</div>
+      </div>
+      <p style="margin-top: 1rem; color: #666; font-size: 0.9rem;">
+        Ayrıca koşu takvimimize Instagram 
+        <a href="https://www.instagram.com/twenty_city_runners/" target="_blank" class="instagram-link">(@twenty_city_runners)</a> 
+        üzerinden de ulaşabilirsiniz.
+      </p>
+    </div>
+
+    <!-- Bizi Takip Etmeyi Unutma -->
+    <div class="card social-section">
+      <h2 class="social-title">
+        🔔 BİZİ TAKİP ETMEYİ UNUTMA! 📢
+      </h2>
+      <div class="social-buttons">
+        <a href="https://www.strava.com/clubs/TCR20" target="_blank" class="social-button">
+          <span class="icon">➕</span>
+          <div class="text">
+            Strava Grubumuza Katılmak için TIKLAYINIZ!
+            <span class="handle">@TCR20</span>
+          </div>
+        </a>
+        <a href="https://chat.whatsapp.com/C47Manm7sSkGEr36z68xWL" target="_blank" class="social-button">
+          <span class="icon">➕</span>
+          <div class="text">
+            WhatsApp Grubumuza Katılmak için TIKLAYINIZ!
+            <span class="handle">@TCR</span>
+          </div>
+        </a>
+        <a href="https://www.instagram.com/twenty_city_runners/" target="_blank" class="social-button">
+          <span class="icon">➕</span>
+          <div class="text">
+            Instagram Sayfamıza Katılmak için TIKLAYINIZ!
+            <span class="handle">@twenty_city_runners</span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- SSS -->
+    <div class="card">
+      <h2 class="section-title">
+        <span class="icon">❓</span>
+        Sık Sorulan Sorular
+      </h2>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          <span>❗</span>
+          <span>Koşularınıza katılım ücretli midir? 💰</span>
+        </div>
+        <div class="faq-answer">
+          - Tüm koşu etkinliklerimize katılım tamamen ücretsizdir.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          <span>❗</span>
+          <span>Her seviyeden koşucu katılabilir mi? 😓</span>
+        </div>
+        <div class="faq-answer">
+          - Tabi ki de yeni başlayanlardan itibaren tüm seviye koşucular, koşularımıza kendi tempolarında katılabilirler.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          <span>❗</span>
+          <span>Size herhangi bir katkıda bulunmak istiyorum, mümkün müdür? 🏃‍♂️🏃‍♀️🏃</span>
+        </div>
+        <div class="faq-answer">
+          - Pacer (tempo belirleyici) olarak özellikle yeni başlayacak katılımcılara yönelik başlangıç seviyesi tempolarda grup koşturabilecek,
+          <ul>
+            <li>- Isınma ve soğuma egzersizleri yaptırabilecek,</li>
+            <li>- Fotoğraf çekimi, düzenlemesi yapabilecek,</li>
+            <li>- Sosyal medya yönetiminde yardımcı olabilecek ekip arkadaşları arayışımız vardır.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          <span>❗</span>
+          <span>Koşuya başlamak istiyorum, başlangıç için neler gerekli? 👟👕</span>
+        </div>
+        <div class="faq-answer">
+          - Başlangıç için gerekli temel ekipmanlar: spor ayakkabısı, ter tutmayan tişört/atlet, kış için ince rüzgarlık/yağmurluk, şort/tayt. Daha detaylı bilgi koşular sırasında verilecektir.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          <span>❗</span>
+          <span>İlk koşu gününde neler yapıyoruz? Nasıl başlıyoruz? 🏃‍♂️🏃‍♀️🗓️</span>
+        </div>
+        <div class="faq-answer">
+          - Belirli dönemlerde yeni katılacak olan arkadaşlar belirli bir sayıya ulaştığında bu gruba yönelik toplu bir ilk koşu etkinliği yaptırıyoruz.
+          <ul>
+            <li>- TCR Kimdir? Neden kuruldu? Bu grup ile nasıl ilerleyebilirsiniz?</li>
+            <li>- Koşu pisti tanıtımı ve genel kullanım kurallarının anlatılması.</li>
+            <li>- Daha önce hiç koşmamış kişiler ile hangi tempolarda koşmaları gerektiğini yürü-koş şeklinde birlikte koşarak anlatılması.</li>
+          </ul>
+          Belirli dönemlerdeki yeni başlayan koşucular için belirlenen zamanlar dışında, daha önce spor yapmış kişiler mevcut en düşük tempodaki (başlangıç temposu) grupla koşulara başlayabilirler.
+        </div>
+      </div>
+    </div>
+
+    <!-- Koşulara Nasıl Katılabilirim -->
+    <div class="card">
+      <h2 class="section-title">
+        <span class="icon">💻</span>
+        Koşularınıza Nasıl Katılabilirim?
+      </h2>
+      <p>
+        <strong>WhatsApp Grubumuz:</strong> 
+        <a href="https://chat.whatsapp.com/C47Manm7sSkGEr36z68xWL" target="_blank">https://chat.whatsapp.com/C47Manm7sSkGEr36z68xWL</a>
+      </p>
+      <p>
+        <strong>Instagram Sayfamız:</strong> 
+        <a href="https://www.instagram.com/twenty_city_runners/" target="_blank">@twenty_city_runners</a>
+      </p>
+      <p>
+        üzerinden bizimle iletişime geçip hemen aramıza katılabilirsin.
+      </p>
+    </div>
+
+    <!-- TCR Forması -->
+    <div class="card">
+      <h2 class="section-title">
+        <span class="icon">👕</span>
+        TCR Formasından Biz de Alabilir miyiz?
+      </h2>
+      <p>
+        İleride kurmayı planladığımız Store tarzı uygulama üzerinden sana uygun olan formanın siparişini oluşturarak sen de TCR formasına sahip olabilirsin.
+      </p>
+    </div>
+
+    <!-- Dikkat Edilmesi Gerekenler -->
+    <div class="card">
+      <h2 class="section-title">
+        <span class="icon">⚠️</span>
+        Dikkat Edilmesi Gereken Genel Bilgiler
+      </h2>
+      <ol style="padding-left: 1.5rem;">
+        <li style="margin-bottom: 1rem;">
+          <strong>🍽️ Beslenmenizi ayarlayın:</strong> Ne Yedin? Ne Zaman Yedin? Ne ile Birlikte Yedin? Dikkat et!
+        </li>
+        <li style="margin-bottom: 1rem;">
+          <strong>😴 Uyku:</strong> En sağlıklı ve en etkili toparlanma şeklidir. Günlük 8 saat uykunuzu ihmal etmeyin.
+        </li>
+        <li>
+          <strong>🏃 Öncesi-Sonrası:</strong> Antrenmandan Önce; Isınma, Dinamik Esnetmeler. Antrenmandan Sonra; Soğuma, Statik Germe bölümlerini ihmal etmeyin.
+        </li>
+      </ol>
+    </div>
+
+    <!-- Hakkında -->
+    <div class="card">
+      <h2 class="section-title">
+        <span class="icon">ℹ️</span>
+        Hakkında
+      </h2>
+      <ul class="info-list">
+        <li>
+          <div class="info-label">Kuruluş:</div>
+          <div class="info-value">26 Temmuz 2025, Pamukkale Üniversitesi Atletizm Pisti, DENİZLİ.</div>
+        </li>
+        <li>
+          <div class="info-label">Kurucular:</div>
+          <div class="info-value">Ayça ŞEN, Ömer OKLU.</div>
+        </li>
+        <li>
+          <div class="info-label">Yönetim:</div>
+          <div class="info-value">Bilge AYAN, Veysel AYAN, Çağatay TÜYLÜ, Beyza ARLI, Ruken ÜÇA, Ahmet KARAKAYA.</div>
+        </li>
+        <li>
+          <div class="info-label">Katıldıkları Yarışlar:</div>
+          <div class="info-value">Bodrum Yarı Maratonu 10k/21k (Ekim 2025), Lykos Yarı Maratonu 5k/10k/21k (26 Ekim 2025)</div>
+        </li>
+        <li>
+          <div class="info-label">Elde Edilen Başarılar:</div>
+          <div style="margin-top: 0.5rem;">
+            <div class="achievement-item">
+              <div class="achievement-number">1</div>
+              <div class="achievement-text">🏆 Bodrum Y.M. '25 Genel Klasman 1.liği 01:16 Ömer OKLU</div>
+            </div>
+            <div class="achievement-item">
+              <div class="achievement-number">2</div>
+              <div class="achievement-text">🏆 Lykos Y.M'25 18-34 Yaş Grubu 2.liği 01:26 Ömer OKLU</div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Grup Fotoğrafları -->
+    <div class="group-photos">
+      <img src="/images/grup-foto-1.png" alt="TCR Grup Fotoğrafı 1" class="group-photo">
+      <img src="/images/grup-foto-2.png" alt="TCR Grup Fotoğrafı 2" class="group-photo">
+    </div>
+  </div>
+
+  <footer style="text-align: center; padding: 3rem 1.5rem; font-size: 0.875rem; color: #666; border-top: 1px solid #eee; margin-top: 3rem;">
+    <div class="container">
+      <a href="/">Ana Sayfa</a> · <a href="/privacy">Gizlilik Politikası</a> · <a href="/terms">Kullanım Koşulları</a>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,5 +1,20 @@
 # Rivlus Site Deploy Rehberi
 
+## Git ile Deploy (Vercel otomatik çekiyor)
+
+Repo’yu Git’e push ettiğinde Vercel otomatik deploy alır. **404 alıyorsan** büyük ihtimalle Build ayarları yanlıştır.
+
+### Build & Development Settings (Vercel → Settings → Build and Deployment)
+
+- **Framework Preset:** `Other` (veya “None” / static)
+- **Build Command:** *(boş bırak)* — bu projede build yok, statik HTML
+- **Output Directory:** *(boş bırak)* — site kök dizinde (`index.html` repo kökünde)
+- **Install Command:** *(boş bırak)*
+
+Eğer Output Directory `build` veya `dist` ise Vercel oraya bakıyor; bu repoda site dosyaları kökte olduğu için 404 olur. Hepsinin boş olduğundan emin ol, kaydet, sonra **Redeploy** yap.
+
+---
+
 ## Environment Variables (Vercel → Settings → Environment Variables)
 
 **ÖNEMLİ:** Bu değişkenler olmadan paylaşım linkleri çalışmaz!
