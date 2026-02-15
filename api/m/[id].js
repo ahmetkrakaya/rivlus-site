@@ -265,36 +265,13 @@ module.exports = async function handler(req, res) {
         return;
       }
       
-      const deepLink = ${JSON.stringify(deepLink)};
+      // Sadece "Uygulamada Aç" butonuna tıklanınca deep link açılsın.
+      // Otomatik redirect (setTimeout ile window.location) birçok ortamda path'i
+      // kaybettirip uygulamanın login ekranına düşmesine neden oluyordu.
       const appLink = document.getElementById('app-link');
-      let clicked = false;
-      let opened = false;
-      
-      // Kullanıcı sayfaya tıklarsa veya sayfa yüklendiğinde otomatik aç
-      function tryOpenApp() {
-        if (opened) return;
-        opened = true;
-        
-        // Deep link'i deneyelim
-        window.location.href = deepLink;
-        
-        // Eğer uygulama açılmazsa (2 saniye sonra), sayfada kal
-        setTimeout(function() {
-          if (!clicked) {
-            // Sayfa görünür kalır, kullanıcı tekrar deneyebilir
-            appLink.style.opacity = '1';
-          }
-        }, 2000);
-      }
-      
-      // Sayfa yüklendiğinde otomatik aç (sadece gerçek kullanıcılar için)
-      // Küçük bir gecikme ile aç ki preview gösterilsin
-      setTimeout(tryOpenApp, 500);
-      
-      // Manuel tıklama için
       appLink.addEventListener('click', function(e) {
-        clicked = true;
-        tryOpenApp();
+        e.preventDefault();
+        window.location.href = ${JSON.stringify(deepLink)};
       });
     })();
   </script>
