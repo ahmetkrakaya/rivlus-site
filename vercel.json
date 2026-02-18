@@ -20,6 +20,7 @@
     { "source": "/e", "destination": "/api/e" },
     { "source": "/e/:id", "destination": "/api/e/:id" },
     { "source": "/m", "destination": "/api/m" },
-    { "source": "/m/:id", "destination": "/api/m/:id" }
+    { "source": "/m/:id", "destination": "/api/m/:id" },
+    { "source": "/auth/garmin-callback", "destination": "/api/auth/garmin-callback" }
   ]
 }
