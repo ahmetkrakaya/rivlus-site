@@ -36,7 +36,7 @@ module.exports = async function handler(req, res) {
   let title = 'TCR Market Ürünü';
   let price = null;
   let currency = 'TRY';
-  // İlk görseli al (primary_image_url veya listing_images'den ilk görsel)
+  // Etkinliklerdeki gibi: ürün fotoğrafı varsa ilk fotoğraf, yoksa TCR logosu
   const defaultLogoUrl = `${baseUrl}/tcr_logo.jpg`;
   let imageUrl = defaultLogoUrl;
 
@@ -104,12 +104,20 @@ module.exports = async function handler(req, res) {
             const imagesData = await imagesRes.json();
             
             if (Array.isArray(imagesData) && imagesData.length > 0) {
-              // İlk görseli al (zaten sort_order'a göre sıralı)
+              // İlk görseli al (birden fazla varsa sadece ilki - etkinliklerdeki gibi)
               const firstImage = imagesData[0];
               if (firstImage && firstImage.image_url) {
-                const imgUrl = String(firstImage.image_url).trim();
+                let imgUrl = String(firstImage.image_url).trim();
                 if (imgUrl.startsWith('http')) {
                   imageUrl = imgUrl;
+                } else if (supabaseUrl && imgUrl) {
+                  // Relative path: Supabase storage public URL'ye çevir
+                  const base = supabaseUrl.replace(/\/$/, '');
+                  if (imgUrl.startsWith('listing-images/') || imgUrl.startsWith('/listing-images/')) {
+                    imageUrl = `${base}/storage/v1/object/public/${imgUrl.replace(/^\//, '')}`;
+                  } else if (!imgUrl.includes('/')) {
+                    imageUrl = `${base}/storage/v1/object/public/listing-images/${imgUrl}`;
+                  }
                 }
               }
             }
@@ -153,10 +161,9 @@ module.exports = async function handler(req, res) {
   <meta property="og:url" content="${escapeHtml(pageUrl)}" />
   <meta property="og:title" content="${safeTitle} | TCR Market" />
   <meta property="og:description" content="${safePrice}" />
-  <meta property="og:image" content="${imageUrl}" />
-  <meta property="og:image:secure_url" content="${imageUrl}" />
-  <meta property="og:image:type" content="image/jpeg" />
-  ${isDefaultLogo ? '<meta property="og:image:width" content="512" /><meta property="og:image:height" content="512" />' : ''}
+  <meta property="og:image" content="${escapeHtml(imageUrl)}" />
+  <meta property="og:image:secure_url" content="${escapeHtml(imageUrl)}" />
+  ${isDefaultLogo ? '<meta property="og:image:width" content="512" /><meta property="og:image:height" content="512" /><meta property="og:image:type" content="image/jpeg" />' : ''}
   <meta property="og:site_name" content="TCR Market - Twenty City Runners" />
   <meta property="og:locale" content="tr_TR" />
   <meta name="twitter:card" content="summary_large_image" />
