@@ -71,6 +71,31 @@ module.exports = async function handler(req, res) {
     }
   }
 
+  let appStoreUrl = 'https://apps.apple.com/us/app/twenty-city-runners/id6758884316';
+  let playStoreUrl = 'https://play.google.com/store/apps/details?id=com.rivlus.project_tcr';
+
+  if (supabaseUrl && supabaseAnonKey) {
+    try {
+      const versionsUrl = `${supabaseUrl.replace(/\/$/, '')}/rest/v1/app_versions?select=platform,app_store_url,play_store_url`;
+      const versionsRes = await fetch(versionsUrl, {
+        headers: {
+          apikey: supabaseAnonKey,
+          Authorization: `Bearer ${supabaseAnonKey}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      if (versionsRes.ok) {
+        const rows = await versionsRes.json();
+        if (Array.isArray(rows)) {
+          for (const r of rows) {
+            if (r.platform === 'ios' && r.app_store_url) appStoreUrl = r.app_store_url;
+            if (r.platform === 'android' && r.play_store_url) playStoreUrl = r.play_store_url;
+          }
+        }
+      }
+    } catch (_) { /* fallback değerler kullanılır */ }
+  }
+
   const pageUrl = `${baseUrl}/e/${encodeURIComponent(id)}`;
   const safeTitle = escapeHtml(title);
   const safeDesc = escapeHtml(description);
@@ -83,6 +108,7 @@ module.exports = async function handler(req, res) {
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>${safeTitle} | TCR - Twenty City Runners</title>
+  <meta name="apple-itunes-app" content="app-id=6758884316, app-argument=${escapeHtml(deepLink)}" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="${escapeHtml(pageUrl)}" />
   <meta property="og:title" content="${safeTitle} | TCR - Twenty City Runners" />
@@ -163,6 +189,36 @@ module.exports = async function handler(req, res) {
     .btn:active {
       transform: translateY(0);
     }
+    .store-links {
+      margin-top: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .store-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #000;
+      color: white;
+      padding: 0.625rem 1.25rem;
+      text-decoration: none;
+      border-radius: 10px;
+      font-weight: 500;
+      font-size: 0.875rem;
+      transition: opacity 0.2s;
+      min-width: 180px;
+      justify-content: center;
+    }
+    .store-btn:hover { opacity: 0.85; }
+    .store-btn svg { width: 20px; height: 20px; fill: white; flex-shrink: 0; }
+    .redirect-msg {
+      display: none;
+      font-size: 0.9rem;
+      color: #5C6B7A;
+      margin-bottom: 1rem;
+    }
   </style>
 </head>
 <body>
@@ -173,28 +229,53 @@ module.exports = async function handler(req, res) {
     <div class="content">
       <h1 class="title">${safeTitle}</h1>
       <p class="description">${safeDesc}</p>
+      <p class="redirect-msg" id="redirect-msg">Mağazaya yönlendiriliyorsunuz…</p>
       <a href="${escapeHtml(deepLink)}" id="app-link" class="btn">Uygulamada Aç</a>
+      <div class="store-links" id="store-links">
+        <a href="${escapeHtml(appStoreUrl)}" class="store-btn" id="ios-btn">
+          <svg viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+          App Store
+        </a>
+        <a href="${escapeHtml(playStoreUrl)}" class="store-btn" id="android-btn">
+          <svg viewBox="0 0 24 24"><path d="M3.18 23.49c.16.16.38.24.6.24.12 0 .24-.02.35-.07L22.43 12.9c.38-.19.61-.58.61-1.01s-.24-.82-.62-1.01L4.13.12C3.83-.04 3.47-.03 3.18.14 2.89.31 2.72.63 2.72.97v22.05c0 .35.17.67.46.84zM4.22 2.37l9.69 5.48L5.99 15.6V2.37z"/></svg>
+          Google Play
+        </a>
+      </div>
     </div>
   </div>
   <script>
     (function() {
-      // Bot algılama - WhatsApp, Telegram, Facebook gibi crawler'lar için JavaScript çalışmasın
-      const ua = navigator.userAgent || '';
-      const isBot = /bot|crawler|spider|crawling|facebookexternalhit|WhatsApp|Telegram|Slack|Twitter|LinkedIn/i.test(ua);
-      
-      // Bot ise JavaScript çalıştırma (preview için sayfa görünür kalmalı)
-      if (isBot) {
+      var ua = navigator.userAgent || '';
+      var isBot = /bot|crawler|spider|crawling|facebookexternalhit|WhatsApp|Telegram|Slack|Twitter|LinkedIn/i.test(ua);
+      if (isBot) return;
+
+      var isIOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+      var isAndroid = /Android/i.test(ua);
+      var appStoreUrl = ${JSON.stringify(appStoreUrl)};
+      var playStoreUrl = ${JSON.stringify(playStoreUrl)};
+
+      if (isIOS || isAndroid) {
+        var storeUrl = isIOS ? appStoreUrl : playStoreUrl;
+        var msg = document.getElementById('redirect-msg');
+        var appLink = document.getElementById('app-link');
+        if (msg) msg.style.display = 'block';
+        if (appLink) {
+          appLink.textContent = isIOS ? 'App Store\\'dan İndir' : 'Google Play\\'den İndir';
+          appLink.href = storeUrl;
+        }
+        var storeLinks = document.getElementById('store-links');
+        if (storeLinks) storeLinks.style.display = 'none';
+        setTimeout(function() { window.location.href = storeUrl; }, 800);
         return;
       }
-      
-      // Sadece "Uygulamada Aç" butonuna tıklanınca deep link açılsın.
-      // Otomatik redirect (setTimeout ile window.location) birçok ortamda path'i
-      // kaybettirip uygulamanın login ekranına düşmesine neden oluyordu.
-      const appLink = document.getElementById('app-link');
-      appLink.addEventListener('click', function(e) {
-        e.preventDefault();
-        window.location.href = ${JSON.stringify(deepLink)};
-      });
+
+      var appLink = document.getElementById('app-link');
+      if (appLink) {
+        appLink.addEventListener('click', function(e) {
+          e.preventDefault();
+          window.location.href = ${JSON.stringify(deepLink)};
+        });
+      }
     })();
   </script>
 </body>
