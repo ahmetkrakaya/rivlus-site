@@ -174,7 +174,17 @@ module.exports = async function handler(req, res) {
     ? `${parseFloat(price).toFixed(0)} ${escapeHtml(currency)}`
     : 'Fiyat Sorunuz';
   const deepLink = `tcr:///marketplace/${encodeURIComponent(id)}`;
-  const isDefaultLogo = imageUrl === defaultLogoUrl;
+  // WhatsApp/Facebook crawler bazen http veya redirect ile OG'yi tamamen düşürebiliyor.
+  // Bu yüzden görsel URL'yi https'e zorlayıp, geçersizse logoya düş.
+  if (typeof imageUrl === 'string') {
+    imageUrl = imageUrl.trim();
+    if (imageUrl.startsWith('http://')) imageUrl = imageUrl.replace(/^http:\/\//, 'https://');
+    if (!imageUrl.startsWith('https://')) {
+      imageUrl = defaultLogoUrl;
+    }
+  } else {
+    imageUrl = defaultLogoUrl;
+  }
 
   const html = `<!DOCTYPE html>
 <html lang="tr">
@@ -189,7 +199,10 @@ module.exports = async function handler(req, res) {
   <meta property="og:description" content="${safePrice}" />
   <meta property="og:image" content="${escapeHtml(imageUrl)}" />
   <meta property="og:image:secure_url" content="${escapeHtml(imageUrl)}" />
-  ${isDefaultLogo ? '<meta property="og:image:width" content="512" /><meta property="og:image:height" content="512" /><meta property="og:image:type" content="image/jpeg" />' : ''}
+  <meta property="og:image:width" content="512" />
+  <meta property="og:image:height" content="512" />
+  <meta property="og:image:type" content="image/jpeg" />
+  <meta property="og:image:alt" content="TCR Market" />
   <meta property="og:site_name" content="TCR Market - Twenty City Runners" />
   <meta property="og:locale" content="tr_TR" />
   <meta name="twitter:card" content="summary_large_image" />
