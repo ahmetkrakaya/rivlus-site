@@ -32,6 +32,11 @@ module.exports = async function handler(req, res) {
   const host = req.headers['x-forwarded-host'] || req.headers.host;
   const proto = req.headers['x-forwarded-proto'] || 'https';
   const baseUrl = host ? `${proto}://${host}` : (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'https://rivlus.com');
+  // WhatsApp/Facebook preview cache'i genelde og:url üzerinden çalışır.
+  // Query param (örn. ?v=2) ile cache kırmak istiyorsak og:url'e de yansıtmalıyız.
+  const requestUrl = req.url
+    ? `${baseUrl}${req.url.startsWith('/') ? '' : '/'}${req.url}`
+    : `${baseUrl}/m/${encodeURIComponent(id)}`;
 
   let title = 'TCR Market Ürünü';
   let price = null;
@@ -168,7 +173,7 @@ module.exports = async function handler(req, res) {
     } catch (_) { /* fallback değerler kullanılır */ }
   }
 
-  const pageUrl = `${baseUrl}/m/${encodeURIComponent(id)}`;
+  const pageUrl = requestUrl;
   const safeTitle = escapeHtml(title);
   const safePrice = price !== null && price !== undefined 
     ? `${parseFloat(price).toFixed(0)} ${escapeHtml(currency)}`
