@@ -18,6 +18,10 @@ rivlus.com için ana sayfa, gizlilik politikası ve TCR paylaşım linkleri. Ver
 - `/m/:id` (kısa link) → Supabase'den ürün başlığı/fiyat/ilk görsel çeker
 - `/m?...` (uzun link) → query ile gelen veriyi kullanır (title, price, currency, img)
 
+### Partner avantaj QR doğrulama
+- `/p/r/:token` → Personel kamerasının okuttuğu QR; `partner-redeem` edge function ile doğrulama
+- Deep link değildir (TCR uygulamasına yönlendirmez)
+
 ## Vercel'e deploy
 
 1. [vercel.com](https://vercel.com) → Add New → Project
