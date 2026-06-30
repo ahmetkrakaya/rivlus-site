@@ -142,11 +142,12 @@
         icon.className = "status-icon " + (ok ? "ok" : "err");
         icon.textContent = ok ? "✓" : "✕";
 
-        document.getElementById("message").textContent =
-          data.message || (ok ? "İşlem başarılı" : "İşlem reddedildi");
+        document.getElementById("message").textContent = ok
+          ? "Doğrulama başarılı"
+          : "Doğrulama başarısız";
 
         document.getElementById("sub").textContent = ok
-          ? (data.discount_label || "")
+          ? (data.discount_label || "İndirim uygulanabilir.")
           : "Müşteriden uygulamada ekranı yenilemesini isteyebilirsiniz.";
 
         if (data.partner_name) {
